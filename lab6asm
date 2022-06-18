@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+// Макрос для подсчета значения функции a+b-c/d*e
+#define calc(a,b,c,d,e) __asm { __asm mov eax, c __asm imul eax, e __asm cdq __asm idiv d __asm cdq __asm idiv e __asm mov ebx, eax __asm mov eax, a __asm add eax, b_variable __asm sub eax, ebx __asm mov y, eax }
+
+// Макрос для подсчета индекса в диапозоне 1-5 8 - (i + 2)
+#define first_range_calc(i, d) __asm { __asm mov eax, 8 __asm mov ebx, i __asm add ebx, 2 __asm sub eax, ebx __asm mov b_variable, eax}
+
+// Макрос для подсчета индекса в диапозоне 6-10 3 * (i - 1)
+#define second_range_calc(i) __asm { __asm mov eax, 3  __asm mov ebx, i __asm sub ebx, 1 __asm imul eax, ebx __asm cdq __asm mov b_variable, eax}
+
+void main()
+{
+	// 2 вариант. Изменяемая переменная - b.  
+	int a, c, d, e;
+	int b_variable, y;
+
+	printf("Calculation Section. (a - b * c / d + e)\n");
+	printf("Enter variable a value: ");
+	scanf_s("%d", &a);
+	printf("Enter variable c value: ");
+	scanf_s("%d", &c);
+	printf("Enter variable d value: ");
+	scanf_s("%d", &d);
+	printf("Enter variable e value: ");
+	scanf_s("%d", &e);
+
+	for (int i = 1; i <= 10; i++) {
+		if (i <= 5) {
+			first_range_calc(i, d);
+		}
+		else {
+			second_range_calc(i);
+		}
+		calc(a, b_variable, c, d, e);
+		printf("Variable B Value - %d\tCalculation Result - %d\n", b_variable, y);
+	}
+
+}
